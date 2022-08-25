@@ -1,8 +1,15 @@
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { colors, ENTER, CLEAR } from "./src/constants";
 import Keyboard from "./src/components/Keyboard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const NUMBER_OF_TRIES = 5;
 function copyArray(arr) {
@@ -16,10 +23,13 @@ export default function App() {
     new Array(NUMBER_OF_TRIES).fill(new Array(letters.length).fill(""))
   );
   //for adding the value at the correct position
+  //states
   const [currRow, setCurrRow] = useState(0);
   const [currCol, setCurrCol] = useState(0);
+  const [status, setStatus] = useState("playing");
   //when key pressed adding the alphabet at correct postion
   const onKeyPressed = (key) => {
+    if (status !== "playing") return;
     //copy array since cant change the original state
     const newCopy = copyArray(rows);
 
@@ -75,6 +85,22 @@ export default function App() {
   const greenCaps = getAllLetterWithColor(colors.primary);
   const yellowCaps = getAllLetterWithColor(colors.secondary);
   const blackCaps = getAllLetterWithColor(colors.darkgrey);
+  //use effect for checking if we win or lost the game
+  useEffect(() => {
+    if (currRow > 0) {
+      //checking if we won the game
+      if (gameWon()) {
+        Alert.alert("yay", "you did it");
+        setStatus("won");
+      } else if (currRow === rows.length) {
+        Alert.alert("meh", "try next time");
+        setStatus("lost");
+      }
+    }
+  }, [currRow]);
+  const gameWon = () => {
+    return rows[currRow - 1].every((letter, i) => letter === letters[i]);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
