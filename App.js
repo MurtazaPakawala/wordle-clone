@@ -65,6 +65,16 @@ export default function App() {
     }
     return colors.darkgrey;
   };
+  //main function for key color
+  const getAllLetterWithColor = (color) => {
+    return rows.flatMap((row, i) =>
+      row.filter((letter, j) => getCellBgColor(letter, i, j) === color)
+    );
+  };
+  //colors for key board
+  const greenCaps = getAllLetterWithColor(colors.primary);
+  const yellowCaps = getAllLetterWithColor(colors.secondary);
+  const blackCaps = getAllLetterWithColor(colors.darkgrey);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
@@ -91,7 +101,12 @@ export default function App() {
           </View>
         ))}
       </ScrollView>
-      <Keyboard onKeyPressed={onKeyPressed} />
+      <Keyboard
+        yellowCaps={yellowCaps}
+        greyCaps={blackCaps}
+        onKeyPressed={onKeyPressed}
+        greenCaps={greenCaps}
+      />
     </SafeAreaView>
   );
 }
