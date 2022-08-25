@@ -47,8 +47,23 @@ export default function App() {
       setRows(newCopy);
     }
   };
+  //is cell active border
   const isCellActive = (i, j) => {
     return i === currRow && j === currCol;
+  };
+  //getting background color
+  const getCellBgColor = (letter, i, j) => {
+    //return when col last
+    if (i >= currRow) {
+      return colors.black;
+    }
+    if (letter === letters[j]) {
+      return colors.primary;
+    }
+    if (letters.includes(letter)) {
+      return colors.secondary;
+    }
+    return colors.darkgrey;
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -57,7 +72,7 @@ export default function App() {
       <ScrollView style={styles.map}>
         {rows.map((row, i) => (
           <View key={`row-${i}`} style={styles.row}>
-            {row.map((cell, j) => (
+            {row.map((letter, j) => (
               <View
                 key={`col-${j}`}
                 style={[
@@ -66,10 +81,11 @@ export default function App() {
                     borderColor: isCellActive(i, j)
                       ? colors.lightgrey
                       : colors.darkgrey,
+                    backgroundColor: getCellBgColor(letter, i, j),
                   },
                 ]}
               >
-                <Text style={[styles.cellText]}>{cell.toUpperCase()}</Text>
+                <Text style={[styles.cellText]}>{letter.toUpperCase()}</Text>
               </View>
             ))}
           </View>
